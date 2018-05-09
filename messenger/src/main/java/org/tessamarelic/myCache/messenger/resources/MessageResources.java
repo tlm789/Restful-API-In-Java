@@ -80,12 +80,22 @@ public class MessageResources {
 	//make call to cache map if not there then get from text file
 	@GET
 	@Path("{id}")
-    public Message getMessage(@PathParam("id") long id)  {
+    public Message getMessage(@PathParam("id") long id, @Context UriInfo uriInfo)  {
 	
-		return messageService.getMessage(id);
+		Message  message = messageService.getMessage(id);
+		String uri = getUriForSelf(uriInfo, message);
+		message.addLink(uri,"self");
+		return message;
     		
     }
-	
 
+	private String getUriForSelf(UriInfo uriInfo, Message message) {
+		String uri = uriInfo.getBaseUriBuilder().path(MessageResources.class)
+				.path(Long.toString(message.getId())).build().toString();
+		return uri;
+				
+	}
+	
+	
 	
 }

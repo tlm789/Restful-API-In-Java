@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html>
+<head>
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/css/bootstrap.min.css" integrity="sha384-rwoIResjU2yc3z8GV/NPeZWAv56rSmLldC3R/AZzGRnGxQQKnKkoFVhFQhNUwEyJ" crossorigin="anonymous">
+<script src="https://code.jquery.com/jquery-3.1.1.slim.min.js" integrity="sha384-A7FZj7v+d/sdmMqp/nOQwliLvUsJfDHW+k9Omg/a/EheAdgtzNs3hpfag6Ed950n" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/tether/1.4.0/js/tether.min.js" integrity="sha384-DztdAPBWPRXSA/3eYEEUWrWCy7G5KFbe8fFjk5JAIxUYHKkDx6Qin1DkWx51bBrb" crossorigin="anonymous"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/js/bootstrap.min.js" integrity="sha384-vBWWzlZJ8ea9aCX4pEW3rVHjgjt7zpkNpZk+02D9phzyeVkE+jo0ieGizqPLForn" crossorigin="anonymous"></script>
+
+<style>
+body {
+width: 90%;
+margin:0 auto;
+}
+</style>
+
+<meta charset="UTF-8">
+<title>Insert title here</title>
+</head>
+<body>
+<h1>Send Me a Message</h1>
+<p>Use this contact form to get in touch with me</p>
+<hr>
+<form id = "contact-form" class = "form-data">
+  <fieldset>
+    <div class="form-group">
+      <label for="message">Enter Message</label>
+      <input type="text" name = "message" class="form-control" placeholder="write a message">
+    </div>
+    <input type="submit" value = "Submit" class="btn btn-primary">
+  </fieldset>
+</form>
+<div id = "results_display"></div>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+<script>
+
+const handleFormSubmit = event => {
+	event.preventDefault();
+	const data = formToJSON(form.elements);
+	//const dataContainer = document.getElementById("results_display");
+	//dataContainer.textContent = JSON.stringify(data,null," ");
+	//dataContainer.innerHTML = JSON.stringify(data, null," ");
+	
+	$.ajax({
+		  url:"./webapi/messages",
+		  type:"POST",
+		  data: JSON.stringify(data,null," "),
+		  dataType:"json",
+		  contentType:"application/json; charset=utf-8",	  
+		  success: function(){
+			  alert("Data: " + JSON.stringify(data,null," ") + "\nStatus: ");
+		  }
+		});
+	
+}
+
+const isValidElement = element => {
+	return element.name && element.value;
+}
+
+//check if checkable
+const isValidValue = element => {
+	  return (!['checkbox', 'radio'].includes(element.type) || element.checked);
+	};
+
+
+const formToJSON = elements => [].reduce.call(elements, (data, element) => {
+	if(isValidElement(element) && isValidValue(element)){
+		data[element.name] = element.value;
+	}
+	
+	return data;
+}, {});
+
+const form = document.getElementsByClassName('form-data')[0];
+form.addEventListener('submit', handleFormSubmit);
+</script>
+</body>
+</html>
+

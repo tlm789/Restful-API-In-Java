@@ -15,25 +15,28 @@ import org.tessamarelic.myCache.messenger.threads.MakeThread;
 
 
 public class MessageService {
-
+	
+	MakeThread m = new MakeThread();
+	Thread t1 = new Thread(m);
 	private Map<Long, Message> messages = DatabaseClass.getMessage();
+	
 	
 	public MessageService() {
 		//some to start off if need to test
-		//messages.put(1L, new Message(1, "Hello Message"));
-		//messages.put(2L, new Message(2, "Hello to you"));
+		messages.put(1L, new Message(1, "Hello Message"));
+		messages.put(2L, new Message(2, "Hello to you"));
 		
 		//begin thread to delete expired resources
 		MakeThread m = new MakeThread();
 		Thread t1 = new Thread(m);
-		t1.start();		
+		//t1.start();	
 	}
 	
 	
 	public List<Message> getAllMessages() {
 		
 		if(messages.isEmpty()) {
-			throw new NotFoundException("there are not resources to return");
+			throw new NotFoundException("there are no resources to return");
 		}
 		return new ArrayList<Message>(messages.values());
 	}
